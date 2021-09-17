@@ -1,79 +1,90 @@
 package com.winnertips.nairapredictz;
 
+import static com.mopub.common.logging.MoPubLog.LogLevel.DEBUG;
+import static com.mopub.common.logging.MoPubLog.LogLevel.INFO;
+
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.ads.AudienceNetworkAds;
-import com.google.android.material.navigation.NavigationView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+
+import com.adcolony.sdk.AdColony;
+import com.adcolony.sdk.AdColonyAppOptions;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
 import com.mopub.common.SdkInitializationListener;
+import com.mopub.common.logging.MoPubLog;
+import com.mopub.common.privacy.ConsentDialogListener;
+import com.mopub.common.privacy.PersonalInfoManager;
 import com.mopub.mobileads.BuildConfig;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
+import com.mopub.mobileads.MoPubView;
+import com.winnertips.nairapredictz.databinding.ActivityHome2Binding;
 
 import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
 
-import static com.mopub.common.Constants.TEN_SECONDS_MILLIS;
-import static com.mopub.common.logging.MoPubLog.LogLevel.DEBUG;
-import static com.mopub.common.logging.MoPubLog.LogLevel.INFO;
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
-
-public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-
-
+    private ActivityHome2Binding binding;
     private boolean doubleBack = false;
-    private static final String TAG ="FACEBOOK_ADS" ;
-    private MoPubInterstitial moPubInterstitial;
+    private MoPubView moPubView;
+    String[] adColonyAllZoneIds = {"vzd3d19821f853439194", "vz3981ceebcbb3473797"};
+    String adColonyAppId = "app4f94d4237532463595";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AudienceNetworkAds.initialize(this);
 
-        setContentView(R.layout.activity_home);
-        Toolbar toolbar =  findViewById(R.id.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setDisplayShowHomeEnabled(false);
+        }
+
+        binding = ActivityHome2Binding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        AdColonyAppOptions adColonyAppOptions = new AdColonyAppOptions()
+                .setKeepScreenOn(true);
+        adColonyAppOptions.setPrivacyFrameworkRequired(AdColonyAppOptions.GDPR, true);
+        adColonyAppOptions.setPrivacyConsentString(AdColonyAppOptions.GDPR, "1");
 
-        FirebaseMessaging.getInstance().subscribeToTopic("naira");
+        AdColony.configure(HomeActivity.this, adColonyAppOptions, adColonyAppId, adColonyAllZoneIds);
 
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
 
-        NavigationView navigationView =  findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
-        displayView(R.id.nav_view);
 
-        final SdkConfiguration.Builder configBuilder = new SdkConfiguration.Builder("6e67f7b8d61c494d86a409169f088f5d");
+        final SdkConfiguration.Builder configBuilder = new SdkConfiguration.Builder(getString(R.string.Mopub_Banner));
+
 
         if (BuildConfig.DEBUG) {
             configBuilder.withLogLevel(DEBUG);
@@ -84,92 +95,88 @@ public class Home extends AppCompatActivity
 
         MoPub.initializeSdk(this, configBuilder.build(), initSdkListener());
 
+        //ShowMopubInt();
+        showMopBanner();
 
-        showMopubInt();
-    }
-    private void showMopubInt(){
-        moPubInterstitial = new MoPubInterstitial(this, getString(R.string.Mopub_Int));
-        moPubInterstitial.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
-            @Override
-            public void onInterstitialLoaded(MoPubInterstitial moPubInterstitial) {
-                if (moPubInterstitial != null && moPubInterstitial.isReady()) {
-                    try {
-                        if (moPubInterstitial.isReady()) {
-                            moPubInterstitial.show();
-                        } else {
-                            // Caching is likely already in progress if `isReady()` is false.
-                            // Avoid calling `load()` here and instead rely on the callbacks as suggested below.
-                            Log.d(TAG, "Interstitial ad is loaded and ready to be displayed!");
-                        }
-                    } catch (Throwable e) {
-                        // Do nothing, just skip and wait for ad loading
-                    }
-                }
-            }
 
-            @Override
-            public void onInterstitialFailed(MoPubInterstitial moPubInterstitial, MoPubErrorCode moPubErrorCode) {
-                final Handler handler = new Handler();
+        //onClick(R.id.grid_layout);
 
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        moPubInterstitial.load();
-                    }
-                }, TEN_SECONDS_MILLIS);
+        CardView smart_picks = binding.smartPicks;
+        CardView expert_tips = binding.expertTips;
+        CardView combo_tips = binding.comboTips;
+        CardView elite_picks = binding.elitePicks;
+        CardView super_single = binding.superSingle;
+        CardView all_sports = binding.allSports;
+        //CardView telegram_join = binding.telegramJoin;
 
-            }
+        smart_picks.setOnClickListener((View.OnClickListener) this);
+        expert_tips.setOnClickListener((View.OnClickListener) this);
+        elite_picks.setOnClickListener((View.OnClickListener) this);
+        combo_tips.setOnClickListener((View.OnClickListener) this);
+        super_single.setOnClickListener((View.OnClickListener) this);
+        all_sports.setOnClickListener((View.OnClickListener) this);
+        // telegram_join.setOnClickListener((View.OnClickListener) this);
 
-            @Override
-            public void onInterstitialShown(MoPubInterstitial moPubInterstitial) {
+        FirebaseMessaging.getInstance().subscribeToTopic("naira");
 
-            }
 
-            @Override
-            public void onInterstitialClicked(MoPubInterstitial moPubInterstitial) {
-
-            }
-
-            @Override
-            public void onInterstitialDismissed(MoPubInterstitial moPubInterstitial) {
-
-            }
-        });
 
     }
 
 
     private SdkInitializationListener initSdkListener() {
-        return new SdkInitializationListener() {
-            @Override
-            public void onInitializationFinished() {
-                moPubInterstitial.load();
+        return () -> {
+            // moPubInterstitial.load();
+            getConsentInfo();
 
-            }
         };
     }
+    private void getConsentInfo(){
 
+        PersonalInfoManager mPersonalInfoManager = MoPub.getPersonalInformationManager();
+        mPersonalInfoManager.shouldShowConsentDialog();
+        mPersonalInfoManager.loadConsentDialog(new ConsentDialogListener(){
+            @Override
+            public void onConsentDialogLoaded() {
+                if (mPersonalInfoManager != null) {
+                    mPersonalInfoManager.showConsentDialog();
+                }
+            }
 
+            @Override
+            public void onConsentDialogLoadFailed(@NonNull MoPubErrorCode moPubErrorCode) {
+                MoPubLog.i("Consent dialog failed to load.");
+            }
+        });
+
+    }
+
+    public void showMopBanner() {
+        moPubView = findViewById(R.id.adview);
+        moPubView.setAdUnitId(getString(R.string.Mopub_Banner)); // Enter your Ad Unit ID from www.mopub.com
+        moPubView.loadAd();
+    }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
     }
 
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        /*DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (doubleBack) {
+        } else*/
+        if (doubleBack) {
             AppRate.with(this)
                     .setInstallDays(0) // default 10, 0 means install day.
                     .setLaunchTimes(2) // default 10
                     .setRemindInterval(2) // default 1
                     .setShowLaterButton(true) // default true
                     .setDebug(false) // default false
-                    .setMessage("Do you Love  " + Home.this.getString(R.string.app_name) +
+                    .setMessage("Do you Love  " + HomeActivity.this.getString(R.string.app_name) +
                             "App? Please rate us 5 stars. It keeps us Motivated")
                     .setTitle("Rate us 5 stars please")
                     .setOnClickButtonListener(new OnClickButtonListener() { // callback listener.
@@ -189,7 +196,7 @@ public class Home extends AppCompatActivity
         }
 
         this.doubleBack = true;
-        Toast.makeText(Home.this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+        Toast.makeText(HomeActivity.this, "Press back again to exit", Toast.LENGTH_SHORT).show();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -208,20 +215,25 @@ public class Home extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-       Fragment frag= null;
+        Fragment frag = null;
         int id = item.getItemId();
         if (id == android.R.id.home) {
 
             finish();
         }
+        if (id == R.id.telegram) {
+            startActivity(new Intent(HomeActivity.this, Telegram_Websites.class));
+        }
+
+
         if (id == R.id.about) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Victor Predictz");
+            alert.setTitle("MozGames");
             try {
                 alert.setMessage(
                         "Version " + getApplication().getPackageManager().getPackageInfo(getPackageName(), 0).versionCode +
-                                "\n" + Home.this.getString(R.string.app_name) + "\n" +
-                                "All rights reserved \n"
+                                "\n" + HomeActivity.this.getString(R.string.app_name) + "\n" +
+                                "All Rights Reserved \n"
                 );
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
@@ -229,12 +241,12 @@ public class Home extends AppCompatActivity
 
             alert.show();
 
-        }else if (id == R.id.ppolicy) {
+        } else if (id == R.id.ppolicy) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Privacy Policy");
             try {
                 alert.setMessage(
-                        "Winner Tips Developers built the Victor Predictz app as a free app. This SERVICE is provided by WinnerTips Developers at no cost and is intended for use as is.\n" +
+                        "Winner Tips Developers built the MozGames app as a free app. This SERVICE is provided by WinnerTips Developers at no cost and is intended for use as is.\n" +
                                 "\n" +
                                 "\n" +
                                 "\n" +
@@ -283,15 +295,14 @@ public class Home extends AppCompatActivity
 
             alert.show();
 
-        }
-        else if (id == R.id.feedback) {
-            startActivity(new Intent(Home.this, com.winnertips.nairapredictz.Feedback.class));
+        } else if (id == R.id.feedback) {
+            startActivity(new Intent(HomeActivity.this, com.winnertips.nairapredictz.Feedback.class));
 
-        }else if (id == R.id.ppolicy) {
+        } else if (id == R.id.ppolicy) {
 
             View messageView = getLayoutInflater().inflate(R.layout.about, null, false);
 
-            TextView textView =  messageView.findViewById(R.id.about_credits);
+            TextView textView = messageView.findViewById(R.id.about_credits);
             TextView textView1 = messageView.findViewById(R.id.about_description);
             int defaultColor = textView.getResources().getColor(R.color.colorBlack);
             int defaultColor1 = textView1.getResources().getColor(R.color.colorBlack);
@@ -304,16 +315,14 @@ public class Home extends AppCompatActivity
             builder.setView(messageView);
             builder.create();
             builder.show();
-        }
-
-       else if (id == R.id.rate) {
+        } else if (id == R.id.rate) {
 
             Uri uri = Uri.parse("market://details?id=" + getPackageName());
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             try {
                 startActivity(intent);
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(Home.this, "Unable to find play store", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "Unable to find play store", Toast.LENGTH_SHORT).show();
             }
 
         } else if (id == android.R.id.home) {
@@ -330,71 +339,67 @@ public class Home extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        displayView(id);
-
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    public void displayView(int viewId) {
-
+    public void onClick(View view) {
         Fragment fragment = null;
         String title = "";
+        switch (view.getId()) {
 
-        switch (viewId) {
-            case R.id.nav_dailytoptips:
-                fragment = new DailyTopTips();
-                title = "Top Picks";
-                break;
-            case R.id.nav_megajackpot:
-                fragment = new com.winnertips.nairapredictz.MegaJackpotTips();
-                title = "Combo Tips";
-                break;
-            case R.id.nav_midweekjackpot:
-                fragment = new com.winnertips.nairapredictz.MidweekJackpot();
-                title = "Expert Tips";
-                break;
-            case R.id.nav_elite:
-                fragment = new com.winnertips.nairapredictz.Elite();
-                title = "Elite Tips";
-                break;
-            case R.id.nav_twoplus:
-                fragment = new com.winnertips.nairapredictz.Twoplus();
-                title = "Super Single";
-                break;
-            case R.id.nav_allsports:
-                fragment = new com.winnertips.nairapredictz.Allsports();
-                title = "All Sports Tips";
-                break;
-            case R.id.nav_telegram:
-                fragment = new com.winnertips.nairapredictz.Telegram_Websites();
-                title = "Telegram Channel";
+            case R.id.expert_tips:
+                Intent intent6 = new Intent(view.getContext(), games.class);
+                intent6.putExtra("title", "Expert Tips");
+                intent6.putExtra("db", "naira");
+                intent6.putExtra("selectedp", "expert tips");
+                startActivity(intent6);
                 break;
 
-            default:
-                fragment = new DailyTopTips();
-                title = "Top Picks";
+            case R.id.combo_tips:
+                Intent intent1 = new Intent(view.getContext(), games.class);
+                intent1.putExtra("title", "Combo Tips");
+                intent1.putExtra("db", "naira");
+                intent1.putExtra("selectedp", "high odd tips");
+                startActivity(intent1);
+                break;
+
+            case R.id.super_single:
+                Intent intent2 = new Intent(view.getContext(), games.class);
+                intent2.putExtra("title", "Super Single");
+                intent2.putExtra("db", "naira");
+                intent2.putExtra("selectedp", "two plus");
+                startActivity(intent2);
+                break;
+
+            case R.id.elite_picks:
+                Intent intent3 = new Intent(view.getContext(), games.class);
+                intent3.putExtra("title", "Elite Picks");
+                intent3.putExtra("db", "naira");
+                intent3.putExtra("selectedp", "elite picks");
+                startActivity(intent3);
+                break;
+
+            case R.id.all_sports:
+                Intent intent4 = new Intent(view.getContext(), games.class);
+                intent4.putExtra("title", "All Sports Tips");
+                intent4.putExtra("db", "naira");
+                intent4.putExtra("selectedp", "all sports");
+                startActivity(intent4);
+                break;
+
+            case R.id.smart_picks:
+                Intent intent5 = new Intent(view.getContext(), games.class);
+                intent5.putExtra("title", "Smart Picks");
+                intent5.putExtra("db", "naira");
+                intent5.putExtra("selectedp", "smart picks");
+                startActivity(intent5);
+                break;
+
+
         }
 
-        if (fragment != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame, fragment);
-            ft.commit();
-        }
-
-        // set the toolbar title
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
         }
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-
     }
-
 
 }

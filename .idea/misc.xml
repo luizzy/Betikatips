@@ -1,9 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable-xxxhdpi/allsports.xml" value="0.26871794871794874" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable-xxxhdpi/combo.xml" value="0.26871794871794874" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable-xxxhdpi/elite.xml" value="0.26871794871794874" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable-xxxhdpi/expert.xml" value="0.26871794871794874" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/allsports.xml" value="0.26871794871794874" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/background.xml" value="0.136" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/box.xml" value="0.26871794871794874" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/combo.xml" value="0.26871794871794874" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/elite.xml" value="0.26871794871794874" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/expert.xml" value="0.26871794871794874" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/ic_launcher_background.xml" value="0.26871794871794874" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/top.xml" value="0.26871794871794874" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/vvvv.xml" value="0.12138157894736842" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/acivity_main.xml" value="0.14855072463768115" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/activity_feedback.xml" value="0.1" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/activity_home.xml" value="0.2" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/activity_home2.xml" value="0.16" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/activity_post_detailed.xml" value="0.1" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/app_bar_home.xml" value="0.1" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/content_home.xml" value="0.23233695652173914" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/content_scrolling.xml" value="0.1634963768115942" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/fragment_tips.xml" value="0.15443840579710144" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/native_ad_layout.xml" value="0.1" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/post_row.xml" value="0.12487335359675786" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/telegram_websites.xml" value="0.2" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/top.xml" value="0.1634963768115942" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/menu/activity_home_drawer.xml" value="0.2351851851851852" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/menu/home.xml" value="0.2" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/menu/menu_home.xml" value="0.25677083333333334" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.16799999999999998" />
+      </ProjectState>
+    </option>
   </component>
 </project>
