@@ -13,6 +13,8 @@
         <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/combo.xml" value="0.26871794871794874" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/elite.xml" value="0.26871794871794874" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/expert.xml" value="0.26871794871794874" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/gnt_outline_shape.xml" value="0.1723684210526316" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/gnt_rounded_corners_shape.xml" value="0.1723684210526316" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/ic_launcher_background.xml" value="0.26871794871794874" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/top.xml" value="0.26871794871794874" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/drawable/vvvv.xml" value="0.12138157894736842" />
@@ -24,7 +26,7 @@
         <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/app_bar_home.xml" value="0.1" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/content_home.xml" value="0.23233695652173914" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/content_scrolling.xml" value="0.1634963768115942" />
-        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/fragment_tips.xml" value="0.15443840579710144" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/fragment_tips.xml" value="0.1" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/native_ad_layout.xml" value="0.1" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/post_row.xml" value="0.12487335359675786" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/Betikatips/app/src/main/res/layout/telegram_websites.xml" value="0.2" />
